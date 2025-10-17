@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 public class MainCamera_Action : MonoBehaviour
 {
@@ -12,6 +13,31 @@ public class MainCamera_Action : MonoBehaviour
 
     public float CameraSpeed = 10.0f;       // 카메라의 속도
     Vector3 TargetPos;                      // 타겟의 위치
+
+    public float timer = 0.0f;
+    private Vector3 startPosition;
+    private Vector3 endPosition;
+
+    public Player playerScript; // 1. Inspector에서 Player를 연결할 슬롯
+    private Camera cam;
+
+    private void Start()
+    {
+        cam = GetComponent<Camera>();
+        startPosition = transform.position;
+        endPosition = startPosition + new Vector3(19.15f, 0.28f, 0);
+        StartCoroutine(IntroCamera());
+    }
+
+
+    private void Update()
+    {
+        if (playerScript.isIntro == false)
+        {
+            cam.orthographicSize = 20;
+        }
+    }
+
 
     // Update is called once per frame
     void FixedUpdate()
@@ -30,4 +56,18 @@ public class MainCamera_Action : MonoBehaviour
         }
     }
 
+
+    IEnumerator IntroCamera()
+    {
+
+        while(timer < 5.0f)
+        {
+            timer += Time.deltaTime;
+            float t = timer / 5;
+            transform.position = Vector3.Lerp(startPosition, endPosition, t);
+            yield return null;
+        }
+
+        transform.position = endPosition;
+    }
 }
