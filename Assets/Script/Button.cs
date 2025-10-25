@@ -40,9 +40,9 @@ public class Button : MonoBehaviour
         if (isPressed && other.CompareTag("Gem"))
         {
             isPressed = false;
-            sr.enabled = true;
-            tilemapToHide.enabled = true;
-            dm.NotifyButtonReleased();
+            if (sr != null) sr.enabled = true;
+            if (tilemapToHide != null) tilemapToHide.enabled = true;
+            if (dm != null) dm.NotifyButtonReleased();
         }
     }
 

@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
     private SpriteRenderer sr;
     public GameScreenManage sm;
     private float moveInput;
-    public float jumpPower;
+    public float jumpPower = 10;
 
     public Transform groundCheck;
     public float groundCheckRadius;
@@ -296,62 +296,85 @@ public class Player : MonoBehaviour
     IEnumerator Ending()
     {
         
-        sr.enabled = false;
-        yield return new WaitForSeconds(1);
+        
+        yield return new WaitForSeconds(3);
         transform.position = new Vector3(-0.85f, 0.28f, 0);
         yield return new WaitForSeconds(3);
+        isIntro = true;
         sm.FadeIn3Seconds();
+        yield return new WaitForSeconds(3);
         sr.enabled = true;
 
 
         AnimatorChange("isIDLE");
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(3);
 
         gemItemOnHead.SetGemsActive(true);
         AnimatorChange("isJumpUp");
-        rb.linearVelocity = new Vector2(-moveSpeed, jumpPower);
+        rb.linearVelocity = new Vector2(0, jumpPower);
+        yield return new WaitUntil(() => rb.linearVelocity.y < 0.1f);
+        AnimatorChange("isJumpDown");
+        yield return new WaitUntil(() => isGround == true);
+        
+        AnimatorChange("isIDLE");
+        yield return new WaitForSeconds(1);
+
+
+        AnimatorChange("isJumpUp");
+        rb.linearVelocity = new Vector2(moveSpeed, jumpPower);
         yield return new WaitUntil(() => rb.linearVelocity.y < 0.1f);
         AnimatorChange("isJumpDown");
         yield return new WaitUntil(() => isGround == true);
         gemItemOnHead.SetGemsActive(false);
+        rb.linearVelocity = Vector2.zero;
+        AnimatorChange("isIDLE");
+        yield return new WaitForSeconds(3);
+        gemItemOnHead.SetGemsActive(false);
 
-        yield return new WaitForSeconds(2);
         AnimatorChange("isRun");
-        rb.linearVelocity = new Vector2(moveSpeed * 2, 0);
+        rb.linearVelocity = new Vector2(moveSpeed * 1.6f, 0);
         yield return new WaitForSeconds(1.5f);
-        rb.linearVelocity = new Vector2(-moveSpeed * 2, 0);
+        sr.flipX = true;
+        rb.linearVelocity = new Vector2(-moveSpeed * 1.6f, 0);
         yield return new WaitForSeconds(1.5f);
-        rb.linearVelocity = new Vector2(moveSpeed * 2, 0);
+        sr.flipX = false;
+        rb.linearVelocity = new Vector2(moveSpeed * 1.6f, 0);
         yield return new WaitForSeconds(1.5f);
-        rb.linearVelocity = new Vector2(-moveSpeed * 2, 0);
+        sr.flipX = true;
+        rb.linearVelocity = new Vector2(-moveSpeed * 1.6f, 0);
         yield return new WaitForSeconds(1.5f);
         rb.linearVelocity = Vector2.zero;
+        sr.flipX = false;
 
+        yield return new WaitForSeconds(3);
         gemItemOnHead.SetGemsOpacity(1);
         gemItemOnHead.SetGemsActive(true);
         AnimatorChange("isJumpUp");
-        rb.linearVelocity = new Vector2(-moveSpeed, jumpPower);
+        rb.linearVelocity = new Vector2(0, jumpPower);
         yield return new WaitUntil(() => rb.linearVelocity.y < 0.1f);
         AnimatorChange("isJumpDown");
         yield return new WaitUntil(() => isGround == true);
+        AnimatorChange("isIDLE");
         yield return new WaitForSeconds(1);
         AnimatorChange("isJumpUp");
-        rb.linearVelocity = new Vector2(-moveSpeed, jumpPower);
+        rb.linearVelocity = new Vector2(0, jumpPower);
         yield return new WaitUntil(() => rb.linearVelocity.y < 0.1f);
         AnimatorChange("isJumpDown");
         yield return new WaitUntil(() => isGround == true);
+        AnimatorChange("isIDLE");
         yield return new WaitForSeconds(1);
         AnimatorChange("isJumpUp");
-        rb.linearVelocity = new Vector2(-moveSpeed, jumpPower);
+        rb.linearVelocity = new Vector2(0, jumpPower);
         yield return new WaitUntil(() => rb.linearVelocity.y < 0.1f);
         AnimatorChange("isJumpDown");
         yield return new WaitUntil(() => isGround == true);
+        AnimatorChange("isIDLE");
 
         yield return new WaitForSeconds(2);
-        sm.FadeIn3Seconds();
+        sm.FadeOut3Seconds();
 
-
-        yield return new WaitForSeconds(5);
+        sm.StartEndingSequence();
+        yield return new WaitForSeconds(10);
         SceneManager.LoadScene("StartScene");
     }
 
@@ -367,11 +390,12 @@ public class Player : MonoBehaviour
             // 3. 문 콜라이더가 감지되었다면
             if (doorCollider != null)
             {
-
                 // 4. 플레이어 멈추기
-                isIntro = true; // 조작 막기 (플래그 재활용)
+                 // 조작 막기 (플래그 재활용)
                 AnimatorChange("isIDLE"); // 멈춤 애니메이션
-
+                sr.enabled = false;
+                moveSpeed = 8;
+                jumpPower = 10;
                 sm.FadeOut3Seconds();
                 StartCoroutine(Ending());
 

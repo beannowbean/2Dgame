@@ -37,6 +37,10 @@ public class MainCamera_Action : MonoBehaviour
         {
             cam.orthographicSize = 30;
         }
+        else
+        {
+            cam.orthographicSize = 5;
+        }
     }
 
 
