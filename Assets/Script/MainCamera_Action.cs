@@ -1,14 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Collections;
 
 public class MainCamera_Action : MonoBehaviour
 {
     public GameObject Target;               // 카메라가 따라다닐 타겟
 
     public float offsetX = 0.0f;            // 카메라의 x좌표
-    public float offsetY = 0.0f;           // 카메라의 y좌표
+    public float offsetY = 0.28f;           // 카메라의 y좌표
     public float offsetZ = -10.0f;          // 카메라의 z좌표
 
     public float CameraSpeed = 10.0f;       // 카메라의 속도
@@ -24,17 +23,19 @@ public class MainCamera_Action : MonoBehaviour
     private void Start()
     {
         cam = GetComponent<Camera>();
-        startPosition = transform.position;
-        endPosition = startPosition + new Vector3(19.15f, 0.28f, 0);
-        StartCoroutine(IntroCamera());
+        if (Player.isIntro == true)
+        {
+            StartCoroutine(IntroCamera());
+        }
+        
     }
 
 
     private void Update()
     {
-        if (playerScript.isIntro == false)
+        if (Player.isIntro == false)
         {
-            cam.orthographicSize = 20;
+            cam.orthographicSize = 30;
         }
     }
 
@@ -59,8 +60,10 @@ public class MainCamera_Action : MonoBehaviour
 
     IEnumerator IntroCamera()
     {
+        startPosition = transform.position;
+        endPosition = startPosition + new Vector3(19.15f, 0.28f, 0);
 
-        while(timer < 5.0f)
+        while (timer < 5.0f)
         {
             timer += Time.deltaTime;
             float t = timer / 5;

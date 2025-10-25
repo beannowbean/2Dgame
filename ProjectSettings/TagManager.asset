@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Gem
+  - Animal
+  - Button
+  - Door
   layers:
   - Default
   - TransparentFX
@@ -11,10 +15,10 @@ TagManager:
   - Ground
   - Water
   - UI
+  - Door
   - 
   - 
-  - 
-  - 
+  - PostProcessing
   - 
   - 
   - 
